@@ -1,0 +1,33 @@
+<img src="{{album.album_logo}}">
+
+<h1>{{album.album_title}}</h1>
+<h2>{{album.artist}}</h2>
+
+{% comment %}
+<ul>
+    {% for song in album.song_set.all %}
+    <li>{{song.song_title}} - {{song.file_type}}</li>
+    {% empty %}
+        <li>There isn't any songs</li>
+    {% endfor %}
+</ul>
+{% endcomment %}
+
+{% if error_message %}
+    <p><strong>{{error_message}}</strong></p>
+{% endif %}
+
+<form action="{% url 'music:favorite' album.id %}" method="post">
+    {% csrf_token %}
+    {% for song in album.song_set.all %}
+        <input type="radio" id="song{{forloop.counter}}" name="song" value="{{song.id}}" />
+        <label for="song{{forloop.counter}}">
+            {{ song.song_title }}
+            {% if song.is_favorite %}
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAPFBMVEX////Nzc3Ly8u1tbXAwMC3t7e7u7vGxsa+vr7Dw8PU1NTY2Nj8/PzMzMzf39/29vaZmZmsrKyhoaHp6en44POIAAAAhElEQVQYlVWP0RKFIAhEXUQJyKz8/3+9mjlz44mzMy7HEObUFr5D8uVGdHwCMeP9j4/iJjb3vTm0OMQ0M44aAHN3cFaANKfeDyflLacYaYujSIp37kHn+rSoYXCiyf2G2HjAvOSMwEQ5aVpWMAiT6PUGDI6wK/L9Bik+kn6fS3z9wLvFD/+FA+8b9i7qAAAAAElFTkSuQmCC"/>
+            {% endif %}
+        </label><br>
+    {% endfor %}
+    <input type="submit" value="Favorite" />
+
+</form>
